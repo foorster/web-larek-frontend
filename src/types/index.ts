@@ -7,7 +7,6 @@ interface IProduct {
 	title: string;
 	category: string;
 	price: number | null;
-    inbasket: boolean // Информация о том, находится ли товар в корзине
 }
 
 // Интерфейс всех продуктов, методы
@@ -26,9 +25,7 @@ interface IBasket {
 	list: TBasketProduct[];
     total: number; // Сумма всех продуктов
     showListBasket(product: TBasketProduct[], total:number): void // Показываем список товаров
-    addProductBasket(productId: string): IProduct;
-    deleteProductBasket(productId: string): void;
-    updateBasket(productId: string): boolean;
+    updateBasket(productId: string): boolean; // Можем проверить, есть ли товар в корзине
     countProducts(productId: string): number; // Возможно его надо перенести функцией в updateBasket
     clearListBasket(): void // Очищаем корзину
 }
@@ -38,6 +35,7 @@ interface IUserInfo {
 	address: string;
 	email: string;
 	phone: number;
+    payment: TPaymentMethod;
 }
 
 interface IUserInfoData {
@@ -45,6 +43,8 @@ interface IUserInfoData {
     setUserInfo(userData: IUserInfo): void;
 }
 
+// Тип для выбора способа оплаты
+type TPaymentMethod = 'online' | 'cash';
 
 // Тип для корзины с заказами
 type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
