@@ -1,6 +1,6 @@
 // Взяли данные из постмана
 // Интерфейс продукта
-interface IProduct {
+export interface IProduct {
 	id: string;
 	description: string;
 	image: string;
@@ -10,22 +10,21 @@ interface IProduct {
 }
 
 // Интерфейс всех продуктов, методы
-interface IProductData {
+export interface IProductData {
     products: IProduct[]; // Массив продуктов, полученных с сервера
     preview: string | null; 
     addProduct(product: IProduct): void;
     deleteProduct(productId: string): void;
     updateProduct(product: IProduct): void;
-    getProduct(productId: string): IProduct;
+    getProduct(productId: string): void;
     checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
 }
 
 // Интерфейс корзины
-interface IBasket {
+export interface IBasket {
 	list: TBasketProduct[];
     total: number; // Сумма всех продуктов
     showListBasket(product: TBasketProduct[], total:number): void // Показываем список товаров
-    updateBasket(productId: string): boolean; // Можем проверить, есть ли товар в корзине
     countProducts(productId: string): number; // Возможно его надо перенести функцией в updateBasket
     clearListBasket(): void // Очищаем корзину
 }
@@ -47,7 +46,7 @@ interface IUserInfoData {
 type TPaymentMethod = 'online' | 'cash';
 
 // Тип для корзины с заказами
-type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
+export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
 
 
 // Тип для модалки с оплатой заказа

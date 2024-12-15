@@ -202,7 +202,6 @@ type TSucсess = Pick<IOrder, 'total'>;
 - list: TBasketProduct[] - массив продуктов, которые добавлены в корзину
 - total: number - сумма всех продуктов, добавленных в корзину
 - showListBasket(product: TBasketProduct[], total:number): void - показывает список товаров и стоимость
-- updateBasket(productId: string): boolean - метод, который обновляет корзину и позволяет узнать, есть ли продукт с заданным айди в корзине
 - countProducts(productId: string): number - счетчик продуктов, проверяет есть ли продукт в корзине и если есть, прибавляет единицу (Возможно его надо перенести функцией в updateBasket)
 - clearListBasket(): void - очищает корзину полностью
 
