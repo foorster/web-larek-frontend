@@ -53,3 +53,13 @@ export type TPay = Pick<IUserInfo, 'address'>;
 
 // Тип для модалки с контактами
 export type TContact = Pick<IUserInfo, 'email' | 'phone'>;
+
+//Выносим нужные методы
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+
+//Интерфейс апи
+export interface IApi{
+    baseUrl: string;
+    get<T>(url:string): Promise<T>;
+    post<T>(url:string, data: object, method?: ApiPostMethods): Promise<T>;
+}

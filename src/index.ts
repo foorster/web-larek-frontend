@@ -2,13 +2,21 @@ import { EventEmitter, IEvents } from './components/base/events';
 import { ProductData } from './components/base/ProductsData';
 import { UserData } from './components/base/UserData';
 import './scss/styles.scss';
+import { IApi } from './types';
+import { settings } from './utils/constants';
+import { AppApi } from './components/base/AppApi';
+import { API_URL } from './utils/constants';
+import { Api } from './components/base/api';
 
 const events: IEvents = new EventEmitter();
+
+const baseApi: IApi = new Api(API_URL, settings);
+const api = new AppApi(baseApi);
 
 const productsData = new ProductData(events);
 const userData = new UserData(events);
 
-const testBasket = [
+/*const testBasket = [
 	{
 		id: '854cef69-976d-4c2a-a18c-2aa45046c390',
 		title: '+1 час в сутках',
@@ -120,4 +128,13 @@ const testProducts = {
 };
 
 productsData.products = testProducts.items;
-productsData.list = testBasket;
+productsData.list = testBasket;*/
+
+Promise.all([api.getProducts()])
+	.then(([ProductItem]) => {
+		productsData.products = ProductItem;
+		console.log(productsData.products);
+	})
+	.catch((err) => {
+		console.error(err);
+	});
