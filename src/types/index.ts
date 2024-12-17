@@ -24,33 +24,32 @@ export interface IProductData {
 export interface IBasket {
 	list: TBasketProduct[];
     total: number; // Сумма всех продуктов
-    showListBasket(product: TBasketProduct[], total:number): void // Показываем список товаров
-    countProducts(productId: string): number; // Возможно его надо перенести функцией в updateBasket
+    showTotal(): number // Показываем cумму товаров в корзине
     clearListBasket(): void // Очищаем корзину
 }
 
 // Интерфейс данных пользователя
-interface IUserInfo {
+export interface IUserInfo {
 	address: string;
 	email: string;
 	phone: number;
     payment: TPaymentMethod;
 }
 
-interface IUserInfoData {
+export interface IUserInfoData {
     getUserInfo(): IUserInfo;
     setUserInfo(userData: IUserInfo): void;
 }
 
 // Тип для выбора способа оплаты
-type TPaymentMethod = 'online' | 'cash';
+export type TPaymentMethod = 'online' | 'cash';
 
 // Тип для корзины с заказами
 export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
 
 
 // Тип для модалки с оплатой заказа
-type TPay = Pick<IUserInfo, 'address'>;
+export type TPay = Pick<IUserInfo, 'address'>;
 
 // Тип для модалки с контактами
-type TContact = Pick<IUserInfo, 'email' | 'phone'>;
+export type TContact = Pick<IUserInfo, 'email' | 'phone'>;
