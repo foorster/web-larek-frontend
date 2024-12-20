@@ -221,7 +221,7 @@ type TSucсess = Pick<IOrder, 'total'>;
 
 Реализует любой продукт в списке (В трех состояниях - на главной странице, при открытии модалки и в корзине). Устанавливает слушатели на кнопки добавления/удаления в/из корзины.
 
-constructor(container: HTMLElement, events: IEvents) - принимает DOM карточки и брокер событий
+constructor(template: HTMLTemplateElement, events: IEvents) - принимает DOM карточки и брокер событий
 
 ##### Элементы
 

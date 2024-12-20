@@ -7,6 +7,7 @@ import { settings } from './utils/constants';
 import { AppApi } from './components/base/AppApi';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/api';
+import { Product } from './components/Product';
 
 const events: IEvents = new EventEmitter();
 
@@ -16,7 +17,9 @@ const api = new AppApi(baseApi);
 const productsData = new ProductData(events);
 const userData = new UserData(events);
 
-/*const testBasket = [
+const productTemplate: HTMLTemplateElement = document.querySelector('#card-catalog')
+
+const testBasket = [
 	{
 		id: '854cef69-976d-4c2a-a18c-2aa45046c390',
 		title: '+1 час в сутках',
@@ -128,7 +131,7 @@ const testProducts = {
 };
 
 productsData.products = testProducts.items;
-productsData.list = testBasket;*/
+productsData.list = testBasket;
 
 Promise.all([api.getProducts()])
 	.then(([ProductItem]) => {
@@ -138,3 +141,9 @@ Promise.all([api.getProducts()])
 	.catch((err) => {
 		console.error(err);
 	});
+
+const testSection = document.querySelector('.gallery');
+
+const product = new Product(productTemplate, events)
+product.setData(testProducts.items[5])
+testSection.append(product.render())
