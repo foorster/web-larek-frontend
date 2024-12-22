@@ -9,7 +9,7 @@ import { API_URL } from './utils/constants';
 import { Api } from './components/base/api';
 import { Product } from './components/Product';
 
-const events: IEvents = new EventEmitter();
+const events = new EventEmitter();
 
 const baseApi: IApi = new Api(API_URL, settings);
 const api = new AppApi(baseApi);
@@ -18,6 +18,11 @@ const productsData = new ProductData(events);
 const userData = new UserData(events);
 
 const productTemplate: HTMLTemplateElement = document.querySelector('#card-catalog')
+
+//Для проверки работы компонентов (например: тык на фотку -> Product:select)
+events.onAll((event)=>{
+    console.log(event.eventName, event.data)
+})
 
 const testBasket = [
 	{
@@ -136,7 +141,6 @@ productsData.list = testBasket;
 Promise.all([api.getProducts()])
 	.then(([ProductItem]) => {
 		productsData.products = ProductItem;
-		console.log(productsData.products);
 	})
 	.catch((err) => {
 		console.error(err);
@@ -145,5 +149,4 @@ Promise.all([api.getProducts()])
 const testSection = document.querySelector('.gallery');
 
 const product = new Product(productTemplate, events)
-product.setData(testProducts.items[5])
-testSection.append(product.render())
+testSection.append(product.render(testProducts.items[1]))

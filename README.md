@@ -221,7 +221,7 @@ type TSucсess = Pick<IOrder, 'total'>;
 
 Реализует любой продукт в списке (В трех состояниях - на главной странице, при открытии модалки и в корзине). Устанавливает слушатели на кнопки добавления/удаления в/из корзины.
 
-constructor(template: HTMLTemplateElement, events: IEvents) - принимает DOM карточки и брокер событий
+constructor(template: HTMLTemplateElement, events: IEvents) - принимает (template) DOM карточки и брокер событий
 
 ##### Элементы
 
@@ -236,6 +236,16 @@ constructor(template: HTMLTemplateElement, events: IEvents) - принимает
 
 - changeButton(): void - метод, позволяющий поменять вид кнопки
 - disableButton(): void - метод, который отображает заблокированную кнопку (если товар бесценный)
+- setPrice(value: number | null): string - метод, который проверяет 
+стоимость товара и в зависимости от значения выводит либо число, либо "Бесценно" (для бесценных товаров)
+- render(productData: Partial<IProduct>): HTMLTemplateElement - отрисует темплейт с информацией, которую сеттеры туда положили 
+
+##### Сеттеры
+
+- set image(image: string): string - установит картинку, если она требуется в темплейте
+- set title(title: string): string - установит название, если оно требуется в темплейте
+- set category(category: string): string - установит категорию, если оно требуется в темплейте
+- price(price: number | null): string - установит цену, если она требуется в темплейте
 
 ---
 
