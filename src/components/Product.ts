@@ -66,6 +66,15 @@ export class Product {
 		this.priceProduct.textContent = this.setPrice(price);
 	}
 
+    /*
+    set id(id){
+        this.productId = id;
+    }
+
+    get id(){
+        return this.productId
+    }*/
+
 	//Рендерим продукт
 	render(productData: Partial<IProduct>) {
 		Object.assign(this, productData); //Перезаписываются необходимые свойства из сеттеров-

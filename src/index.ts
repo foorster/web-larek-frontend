@@ -8,6 +8,7 @@ import { AppApi } from './components/base/AppApi';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/api';
 import { Product } from './components/Product';
+import { MainPage } from './components/MainPage';
 
 const events = new EventEmitter();
 
@@ -17,12 +18,10 @@ const api = new AppApi(baseApi);
 const productsData = new ProductData(events);
 const userData = new UserData(events);
 
-const productTemplate: HTMLTemplateElement = document.querySelector('#card-catalog')
-
 //Для проверки работы компонентов (например: тык на фотку -> Product:select)
-events.onAll((event)=>{
-    console.log(event.eventName, event.data)
-})
+events.onAll((event) => {
+	console.log(event.eventName, event.data);
+});
 
 const testBasket = [
 	{
@@ -146,7 +145,23 @@ Promise.all([api.getProducts()])
 		console.error(err);
 	});
 
+const productTemplate: HTMLTemplateElement =
+	document.querySelector('#card-catalog'); //Темплейт одного продукта
+
+const productsGallery = new MainPage(
+	document.querySelector('.gallery') //Обертка галереи с продуктами
+);
+
 const testSection = document.querySelector('.gallery');
 
-const product = new Product(productTemplate, events)
-testSection.append(product.render(testProducts.items[1]))
+const product = new Product(productTemplate, events);
+const product1 = new Product(productTemplate, events);
+const product2 = new Product(productTemplate, events);
+const productArray = [];
+productArray.push(product.render(testProducts.items[1]));
+productArray.push(product1.render(testProducts.items[0]));
+productArray.push(product2.render(testProducts.items[2]));
+//testSection.append(product.render(testProducts.items[1]));
+
+productsGallery.render({ products: productArray });
+console.log(productsGallery)
