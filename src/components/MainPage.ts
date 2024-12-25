@@ -1,14 +1,16 @@
+import { Component } from "./Component";
+
 interface IMainPage {
 	products: HTMLElement[];
 	total: number;
 }
 
-export class MainPage {
+export class MainPage extends Component<IMainPage>{
 	protected _products: HTMLElement[];
 	protected total: number;
-	protected container: HTMLElement;
 
-	constructor(container: HTMLElement) {
+	constructor(protected container: HTMLElement) {
+        super(container)
 		this.container = container;
 	}
 
@@ -16,8 +18,4 @@ export class MainPage {
 		this.container.replaceChildren(...items);
 	}
 
-	render(data: Partial<IMainPage>) {
-		Object.assign(this, data);
-		return this.container;
-	}
 }

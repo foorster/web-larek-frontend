@@ -2,9 +2,10 @@ import { IProduct, IProductData } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { IEvents } from './base/events';
 import { CDN_URL } from '../utils/constants';
+import { Component } from './Component';
 
-export class Product {
-	protected element: HTMLElement;
+export class Product extends Component<IProduct> {
+	//IProduct - тип для дженерика компонента
 	protected events: IEvents;
 	protected descriptionProduct?: HTMLElement;
 	protected imageProduct?: HTMLImageElement;
@@ -13,16 +14,16 @@ export class Product {
 	protected priceProduct: HTMLElement;
 	protected basketButton: HTMLButtonElement;
 
-	constructor(template: HTMLTemplateElement, events: IEvents) {
+	constructor(protected container: HTMLElement, events: IEvents) {
+		super(container); //т.к. наследование, надо передать в родительский
 		this.events = events;
-		this.element = cloneTemplate(template);
 
-		this.descriptionProduct = this.element.querySelector('.card__text');
-		this.imageProduct = this.element.querySelector('.card__image');
-		this.titleProduct = this.element.querySelector('.card__title');
-		this.categoryProduct = this.element.querySelector('.card__category');
-		this.priceProduct = this.element.querySelector('.card__price');
-		this.basketButton = this.element.querySelector('.card__button');
+		this.descriptionProduct = this.container.querySelector('.card__text');
+		this.imageProduct = this.container.querySelector('.card__image');
+		this.titleProduct = this.container.querySelector('.card__title');
+		this.categoryProduct = this.container.querySelector('.card__category');
+		this.priceProduct = this.container.querySelector('.card__price');
+		this.basketButton = this.container.querySelector('.card__button');
 
 		//При клике на картинку товара выводим Product:select с помощью events.onAll в консоль
 		this.imageProduct.addEventListener('click', () => {
@@ -66,7 +67,7 @@ export class Product {
 		this.priceProduct.textContent = this.setPrice(price);
 	}
 
-    /*
+	/*
     set id(id){
         this.productId = id;
     }
@@ -75,9 +76,5 @@ export class Product {
         return this.productId
     }*/
 
-	//Рендерим продукт
-	render(productData: Partial<IProduct>) {
-		Object.assign(this, productData); //Перезаписываются необходимые свойства из сеттеров-
-		return this.element;
-	}
+
 }

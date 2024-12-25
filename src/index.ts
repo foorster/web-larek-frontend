@@ -9,6 +9,7 @@ import { API_URL } from './utils/constants';
 import { Api } from './components/base/api';
 import { Product } from './components/Product';
 import { MainPage } from './components/MainPage';
+import { cloneTemplate } from './utils/utils';
 
 const events = new EventEmitter();
 
@@ -148,15 +149,18 @@ Promise.all([api.getProducts()])
 const productTemplate: HTMLTemplateElement =
 	document.querySelector('#card-catalog'); //Темплейт одного продукта
 
+
+
 const productsGallery = new MainPage(
 	document.querySelector('.gallery') //Обертка галереи с продуктами
 );
 
 const testSection = document.querySelector('.gallery');
 
-const product = new Product(productTemplate, events);
-const product1 = new Product(productTemplate, events);
-const product2 = new Product(productTemplate, events);
+
+const product = new Product(cloneTemplate(productTemplate), events);
+const product1 = new Product(cloneTemplate(productTemplate), events);
+const product2 = new Product(cloneTemplate(productTemplate), events);
 const productArray = [];
 productArray.push(product.render(testProducts.items[1]));
 productArray.push(product1.render(testProducts.items[0]));
