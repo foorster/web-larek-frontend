@@ -1,5 +1,5 @@
-import { IProduct, TBasketProduct } from '../../types';
-import { Api, ApiListResponse } from '../base/api';
+import { IProduct, TBasketProduct } from '../types';
+import { Api, ApiListResponse } from './base/api';
 
 export interface IApiModel {
 	items: IProduct[];
@@ -9,7 +9,7 @@ export interface IApiModel {
 export class AppApi extends Api {
 	items: IProduct[];
 
-	constructor( baseUrl: string, options?: RequestInit) {
+	constructor(baseUrl: string, options?: RequestInit) {
 		super(baseUrl, options);
 	}
 

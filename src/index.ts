@@ -2,7 +2,7 @@ import { EventEmitter } from './components/base/events';
 import { ProductData } from './components/base/ProductsData';
 import './scss/styles.scss';
 import { IProduct } from './types';
-import { AppApi } from './components/base/AppApi';
+import { AppApi } from './components/AppApi';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/api';
 import { Product } from './components/Product';
@@ -16,7 +16,7 @@ const productsGallery = new MainPage(
 	document.querySelector('.gallery'),
 	events //Обертка галереи с продуктами
 );
-const appApi = new AppApi(API_URL);
+const appApi = new AppApi(API_URL); //Класс для вытягивания продуктов с сервера
 const productData = new ProductData(events);
 
 //Для проверки работы компонентов (например: тык на фотку -> Product:select)
