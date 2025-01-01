@@ -9,23 +9,28 @@ export interface IProduct {
 	price: number | null;
 }
 
+export interface IProductGet {
+	items: IProduct[];
+	total: number | null;
+}
+
 // Интерфейс всех продуктов, методы
 export interface IProductData {
-    products: IProduct[]; // Массив продуктов, полученных с сервера
-    preview: string | null; 
-    addProduct(product: IProduct): void;
-    deleteProduct(productId: string): void;
-    updateProduct(product: IProduct): void;
-    getProduct(productId: string): void;
-    checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
+	products: IProduct[]; // Массив продуктов, полученных с сервера
+	preview: string | null;
+	addProduct(product: IProduct): void;
+	deleteProduct(productId: string): void;
+	updateProduct(product: IProduct): void;
+	getProduct(productId: string): void;
+	checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
 }
 
 // Интерфейс корзины
 export interface IBasket {
 	list: TBasketProduct[];
-    total: number; // Сумма всех продуктов
-    showTotal(): number // Показываем cумму товаров в корзине
-    clearListBasket(): void // Очищаем корзину
+	total: number; // Сумма всех продуктов
+	showTotal(): number; // Показываем cумму товаров в корзине
+	clearListBasket(): void; // Очищаем корзину
 }
 
 // Интерфейс данных пользователя
@@ -33,12 +38,12 @@ export interface IUserInfo {
 	address: string;
 	email: string;
 	phone: number;
-    payment: TPaymentMethod;
+	payment: TPaymentMethod;
 }
 
 export interface IUserInfoData {
-    getUserInfo(): IUserInfo;
-    setUserInfo(userData: IUserInfo): void;
+	getUserInfo(): IUserInfo;
+	setUserInfo(userData: IUserInfo): void;
 }
 
 // Тип для выбора способа оплаты
@@ -46,7 +51,6 @@ export type TPaymentMethod = 'online' | 'cash';
 
 // Тип для корзины с заказами
 export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
-
 
 // Тип для модалки с оплатой заказа
 export type TPay = Pick<IUserInfo, 'address'>;
@@ -58,8 +62,8 @@ export type TContact = Pick<IUserInfo, 'email' | 'phone'>;
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 //Интерфейс апи
-export interface IApi{
-    baseUrl: string;
-    get<T>(url:string): Promise<T>;
-    post<T>(url:string, data: object, method?: ApiPostMethods): Promise<T>;
+export interface IApi {
+	baseUrl: string;
+	get<T>(url: string): Promise<T>;
+	post<T>(url: string, data: object, method?: ApiPostMethods): Promise<T>;
 }

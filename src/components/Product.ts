@@ -2,7 +2,7 @@ import { IProduct, IProductData } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { IEvents } from './base/events';
 import { CDN_URL } from '../utils/constants';
-import { Component } from './Component';
+import { Component } from './base/Component';
 
 export class Product extends Component<IProduct> {
 	//IProduct - тип для дженерика компонента
@@ -37,6 +37,11 @@ export class Product extends Component<IProduct> {
 			});
 		});*/
 	}
+
+    render(data?: Partial<IProduct> | undefined){
+        if (!data) return this.container;
+        return super.render(data)
+    }
 
 	changeButton() {
 		return this.basketButton.classList.contains('');
@@ -75,6 +80,4 @@ export class Product extends Component<IProduct> {
     get id(){
         return this.productId
     }*/
-
-
 }
