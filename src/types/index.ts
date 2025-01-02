@@ -9,11 +9,6 @@ export interface IProduct {
 	price: number | null;
 }
 
-export interface IProductGet {
-	items: IProduct[];
-	total: number | null;
-}
-
 // Интерфейс всех продуктов, методы
 export interface IProductData {
 	products: IProduct[]; // Массив продуктов, полученных с сервера
@@ -27,7 +22,7 @@ export interface IProductData {
 
 // Интерфейс корзины
 export interface IBasket {
-	list: TBasketProduct[];
+	_list: TBasketProduct[];
 	total: number; // Сумма всех продуктов
 	showTotal(): number; // Показываем cумму товаров в корзине
 	clearListBasket(): void; // Очищаем корзину

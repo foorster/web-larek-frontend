@@ -3,7 +3,6 @@ import {
 	IProductData,
 	IBasket,
 	TBasketProduct,
-	IProductGet,
 } from '../../types';
 import { IEvents } from './events';
 
@@ -13,11 +12,12 @@ import { IEvents } from './events';
 export class ProductData implements IProductData, IBasket {
 	products: IProduct[];
 	preview: string | null;
-	list: TBasketProduct[];
+	_list: TBasketProduct[];
 	total: number;
 
 	constructor(protected events: IEvents) {
 		this.products = [];
+		this._list = [];
 	}
 
 	//Так как нам нужно установить и получить продукты на странице и в корзине, необходимы set и get
@@ -30,14 +30,13 @@ export class ProductData implements IProductData, IBasket {
 		return this.products;
 	}
 
-	set _list(_list: TBasketProduct[]) {
-		this.list = this.list;
+	set list(list: TBasketProduct[]) {
+		this._list = this.list;
 		this.events.emit('_list:changed');
 	}
-
-	get _list() {
-		return this.list;
-	}
+	get list() {
+		return this._list;
+	  }
 
 	//Кладем товар в корзину (в массив list)
 	addProduct(product: IProduct) {

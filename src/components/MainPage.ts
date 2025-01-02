@@ -22,7 +22,7 @@ export class MainPage extends Component<IMainPage> {
 		);
 	}
 
-	set products(items: HTMLElement[]) {
-		this.container.replaceChildren(...items);
+	set products(products: HTMLElement[]) {
+		this.container.replaceChildren(...products);
 	}
 }

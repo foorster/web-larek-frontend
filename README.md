@@ -273,6 +273,8 @@ constructor(content: HTMLElement, events: IEvents) - принимает DOM мо
 
 constructor(list: HTMLElement, total: HTMLElement, events: IEvents) - принимает список добавленных в корзину продуктов, итоговую сумму этих продуктов и брокер событий
 
+
+
 ##### Элементы
 
 - arrange: HTMLElementButton - кнопка, позволяющая оформить корзину

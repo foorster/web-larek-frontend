@@ -4,16 +4,17 @@ import { IEvents } from '../base/events';
 export class Modal<T> extends Component<T> {
 	protected modal: HTMLElement;
 	protected events: IEvents;
+	protected _content: HTMLElement;
 
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
 		this.events = events;
-
+		this._content = container.querySelector('.modal__content');
 		const closeButtonElement = this.container.querySelector('.modal__close');
-		closeButtonElement.addEventListener('click', this.close.bind(this));
-
 	}
-
+	set content(value: HTMLElement) {
+		this._content.replaceChildren(value);
+	}
 	open() {
 		this.container.classList.add('modal_active');
 	}
@@ -21,4 +22,9 @@ export class Modal<T> extends Component<T> {
 	close() {
 		this.container.classList.remove('modal_active');
 	}
+    render(): HTMLElement {
+        this._content;
+        this.open();
+        return this.container
+      }
 }
