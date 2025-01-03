@@ -10,7 +10,9 @@ import { IEvents } from './events';
 //для продукта и корзины, по стало не совсем понятно как дотянуться до списка
 //положенных в корзину товаров, чтобы удалить нужный
 export class ProductData implements IProductData, IBasket {
+
 	products: IProduct[];
+	product: IProduct;
 	preview: string | null;
 	_list: TBasketProduct[];
 	total: number;
@@ -51,6 +53,11 @@ export class ProductData implements IProductData, IBasket {
 	}
 
 	updateProduct(product: IProduct) {}
+
+	setPreview(item: IProduct) {
+		this.product = item;
+		this.events.emit('Product:open', item)
+	  }
 
 	//Вернет продукт по айди, если такой есть, если нет, вернёт undefined
 	getProduct(productId: string) {

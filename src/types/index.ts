@@ -11,6 +11,7 @@ export interface IProduct {
 
 // Интерфейс всех продуктов, методы
 export interface IProductData {
+	product:IProduct
 	products: IProduct[]; // Массив продуктов, полученных с сервера
 	preview: string | null;
 	addProduct(product: IProduct): void;
@@ -62,3 +63,7 @@ export interface IApi {
 	get<T>(url: string): Promise<T>;
 	post<T>(url: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
+
+export interface IActions {
+	onClick: (event: MouseEvent) => void;
+  }

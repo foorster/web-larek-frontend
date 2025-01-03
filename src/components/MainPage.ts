@@ -1,5 +1,6 @@
+//---------------Главная страница со всеми продуктами и корзиной---------------//
 import { Component } from './base/Component';
-import { ensureElement } from '../utils/utils';
+import { ensureElement } from './../utils/utils';
 import { IEvents } from './base/events';
 
 interface IMainPage {
