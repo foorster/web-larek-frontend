@@ -9,6 +9,17 @@ export interface IProduct {
 	price: number | null;
 }
 
+export interface IProductSelect {
+	id: string;
+	description: string;
+	image: string;
+	title: string;
+	category: string;
+	price: number | null;
+	selected: boolean;
+}
+
+
 // Интерфейс всех продуктов, методы
 export interface IProductData {
 	product:IProduct
@@ -67,3 +78,15 @@ export interface IApi {
 export interface IActions {
 	onClick: (event: MouseEvent) => void;
   }
+
+  export interface OrderFormData {
+	payment?: string;
+	address?: string;
+	email?: string;
+	phone?: string;
+	total?: string | number;
+}
+
+export interface Order extends OrderFormData {
+	items: string[];
+}

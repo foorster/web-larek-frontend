@@ -1,4 +1,4 @@
-import { IProduct, IProductData, IBasket, TBasketProduct } from '../../types';
+import { Order, IProduct, IProductData, IBasket, TBasketProduct } from '../../types';
 import { IEvents } from './events';
 
 //Класс наследует два интерфейса. Изначально планировалось делать разные классы
@@ -9,6 +9,14 @@ export class ProductData implements IProductData, IBasket {
 	product: IProduct;
 	preview: string | null;
 	_list: TBasketProduct[];
+	order: Order = {
+		address: '',
+		email: '',
+		phone: '',
+		payment: 'card',
+		items: [],
+		total: 0,
+	};
 	total: number;
 
 	constructor(protected events: IEvents) {
@@ -35,12 +43,17 @@ export class ProductData implements IProductData, IBasket {
 		return this._list;
 	}
 
+	get status(): boolean {
+		return this._list.length === 0;
+	}
+
+
 	setPreview(item: IProduct) {
 		this.product = item;
 		this.events.emit('Product:open', item);
 	}
 	setSelectedСard(data: IProduct) {
-		this._list.push(data);
+		this.list.push(data);
 	}
 
 	//Будет искать продукт с заданным айди в массиве корзины
@@ -62,12 +75,18 @@ export class ProductData implements IProductData, IBasket {
 	//Cумма всех товаров в корзине
 	getSumProducts() {
 		let sum = 0;
-		this._list.forEach((prod) => {
+		this.list.forEach((prod) => {
 			sum = sum + prod.price;
 		});
 		return sum;
 	}
 
+	getTotal() {
+		return this.order.items.reduce((total, productId) => {
+			const product = this.list.find((prod) => prod.id === productId);
+			return product ? total + (product.price || 0) : total;
+		}, 0);
+	}
 
 
 	/*

@@ -1,51 +1,48 @@
 import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
+import { createElement, ensureElement } from '../../utils/utils'
 
-export interface IBasketList {
-	container: HTMLElement;
-	title: HTMLElement;
-	list: HTMLElement;
-	arrange: HTMLButtonElement;
+interface IBasketList {
+	products: HTMLElement[];
 	total: HTMLElement;
 }
 
 export class BasketList extends Component<IBasketList> {
-	container: HTMLElement;
-	title: HTMLElement;
-	_list: HTMLElement;
-	arrange: HTMLButtonElement;
-	total: HTMLElement;
-	basketCounter: HTMLElement;
 
-	constructor(template: HTMLTemplateElement, protected events: IEvents) {
-		super(template);
-		this.container = template.content
-			.querySelector('.basket')
-			.cloneNode(true) as HTMLElement;
-		this.title = this.container.querySelector('.modal__title');
-		this._list = this.container.querySelector('.basket__list');
-		this.arrange = this.container.querySelector('.basket__button');
-		this.total = this.container.querySelector('.basket__price');
-		this.basketCounter = document.querySelector('.header__basket-counter');
+	_list: HTMLElement;
+	arrangeButton: HTMLElement;
+	total: HTMLElement;
+
+	constructor(container: HTMLElement, protected events: IEvents) {
+		super(container);
+
+		this._list = ensureElement('.basket__list', this.container);
+		this.arrangeButton = ensureElement('.basket__button', this.container);
+		this.total = ensureElement('.basket__price', this.container);
 		this.products = [];
 	}
-	
 
-	setBasketCounter(value: number) {
-		this.basketCounter.textContent = String(value);
-	  }
+	emptyBasket() {
+		const emptyContent = createElement<HTMLParagraphElement>('p', {
+			textContent: 'Продукты в корзине отсуствуют',
+		});
+		this._list.replaceChildren(emptyContent);
+	}
 
 	totalSum(sum: number) {
-		this.total.textContent = String(sum + ' синапсов');
+		return this.total.textContent = String(sum + ' синапсов');
 	}
 
 	set products(products: HTMLElement[]) {
 		if (products.length) {
 			//Проверяем массив на наличие элементов, если есть, то кнопка активна
 			this._list.replaceChildren(...products);
-			this.arrange.removeAttribute('disabled');
+			this.arrangeButton.removeAttribute('disabled');
 		} else {
-			this.arrange.setAttribute('disabled', 'disabled');
+			this.emptyBasket()
+			this.arrangeButton.setAttribute('disabled', 'disabled');
 		}
 	}
+
+
 }

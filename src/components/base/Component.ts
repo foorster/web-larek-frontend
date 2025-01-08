@@ -12,5 +12,18 @@ export abstract class Component<T> {
 		return this.container;
 	}
 
+	setDisabled(element: HTMLElement, state: boolean): void {
+		if (element) {
+			state
+				? element.setAttribute('disabled', 'disabled')
+				: element.removeAttribute('disabled');
+		}
+	}
 
+	// Установить текстовое содержимое
+	protected setText(element: HTMLElement, value: unknown) {
+		if (element) {
+			element.textContent = String(value);
+		}
+	}
 }

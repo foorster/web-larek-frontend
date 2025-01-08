@@ -1,7 +1,7 @@
 import { EventEmitter } from './components/base/events';
 import { ProductData } from './components/base/ProductsData';
 import './scss/styles.scss';
-import { IProduct } from './types';
+import { IProduct, IProductSelect } from './types';
 import { AppApi } from './components/AppApi';
 import { API_URL } from './utils/constants';
 import { Product } from './components/Product';
@@ -33,7 +33,7 @@ const appApi = new AppApi(API_URL); //Класс для вытягивания �
 const productData = new ProductData(events); //Класс с данными продукта
 
 const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
-const basket = new BasketList(basketTemplate, events);
+const basket = new BasketList(cloneTemplate(basketTemplate), events);
 
 const basketListData = new ProductData(events); //Класс с данными в корзине
 
@@ -63,6 +63,40 @@ events.on('initialData: loaded', () => {
 	productsGallery.render({ products: productsArray });
 });
 
+//Добавили карточку товара в корзину
+events.on('product:inBasket', (product: IProduct) => {
+	//Проверяет, есть ли этот продукт в корзине
+	const status = basketListData.checkProduct(product.id);
+	if (!status) {
+		basketListData.setSelectedСard(product);
+		events.emit('basket:change');
+	}
+});
+
+//Удалили карточку товара из корзины
+events.on('basket:productRemove', (product: IProduct) => {
+	basketListData.deleteProduct(product);
+	events.emit('basket:change');
+});
+
+events.on('basket:change', () => {
+	basket.totalSum(basketListData.getSumProducts()); // Отобразили сумму всех продуктов в корзине
+
+	//Отрисовываем
+	let i = 0;
+	basket.products = basketListData.list.map((product) => {
+		const basketProduct = new BasketProduct(basketTemplateProduct, events, {
+			onClick: () => {
+				events.emit('basket:productRemove', product);
+				events.emit('productButton:change', product);
+			},
+		}); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
+		i++;
+		return basketProduct.render(product, i); //Отрисовываем один продукт
+	});
+	modal.block = true;
+});
+
 //Если нажали на иконку корзины, отрендери данные
 events.on('basket:open', () => {
 	modal.content = basket.render(); //Кладем контент корзины в модалку
@@ -81,10 +115,19 @@ events.on('Product:select', (fullProduct: IProduct) => {
 
 //Открыли продукт
 events.on('Product:open', (fullProduct: IProduct) => {
-	const product = new FullProduct(cloneTemplate(productFullTemplate), events);
+	const product = new FullProduct(cloneTemplate(productFullTemplate), events, {
+		onClick: () => {
+			events.emit('product:inBasket', fullProduct);
+			product.updatePrice(true)
+		},
+	});
 	modal.content = product.render(fullProduct); //Кладем контент продукта в модалку
 	modal.render(); //Отрисовываем модалку
 });
+
+events.on('productButton:change', (fullProduct: IProduct) => {
+	console.log(fullProduct)
+	})
 
 //Блокируем прокрутку при открытии модалки
 events.on('Product:open', () => {
@@ -93,33 +136,3 @@ events.on('Product:open', () => {
 events.on('modal:close', () => {
 	modal.block = false;
 });
-
-//Добавили карточку товара в корзину
-events.on('product:inBasket', () => {
-	basketListData.setSelectedСard(productData.product);
-	let i = 0; //Счетчик продуктов в корзине
-	basket.totalSum(basketListData.getSumProducts()); // отобразить сумма всех продуктов в корзине
-	//Рендерим данные о товарах и сумме сразу, при добавлении товара в корзину
-	basket.products = basketListData._list.map((product) => {
-		const basketProduct = new BasketProduct(basketTemplateProduct, events, { onClick: () => events.emit('basket:productRemove', product) }); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
-		i++;
-		return basketProduct.render(product, i); //Отрисовываем один продукт
-	});
-	basket.setBasketCounter(i); //Кладем количество товаров  в иконку корзины
-	modal.block = true;
-});
-
-
-//Удалили карточку товара из корзины
-events.on('basket:productRemove', (product: IProduct) => {
-	basketListData.deleteProduct(product);
-	basket.totalSum(basketListData.getSumProducts()); // Отобразили сумму всех продуктов в корзине
-	let i = 0;
-	basket.products = basketListData._list.map((product) => {
-		const basketProduct = new BasketProduct(basketTemplateProduct, events, { onClick: () => events.emit('basket:productRemove', product) }); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
-		i++;
-		return basketProduct.render(product, i); //Отрисовываем один продукт
-	});
-	basket.setBasketCounter(i); //Кладем количество товаров  в иконку корзины
-	modal.block = true;
-  });

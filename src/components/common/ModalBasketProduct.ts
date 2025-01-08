@@ -30,6 +30,7 @@ export class BasketProduct implements IBasketProduct {
 		if (actions?.onClick) {
 			this.deleteButton.addEventListener('click', actions.onClick);
 		}
+
 		
 	}
 
