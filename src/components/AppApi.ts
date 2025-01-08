@@ -1,4 +1,4 @@
-import { IProduct, TBasketProduct } from '../types';
+import { IBasket, IProduct, TBasketProduct } from '../types';
 import { Api, ApiListResponse } from './base/api';
 
 export interface IApiModel {
@@ -20,13 +20,15 @@ export class AppApi extends Api {
 		);
 	}
 
-	/*//Добавление продуктов в корзину
+	//Добавление продуктов в корзину
 	addProduct(data: TBasketProduct): Promise<IBasket> {
-		return this._baseApi
-			.post<IBasket>(`/order`, data)
+		return this.post<IBasket>(`/order`, data)
 			.then((list: IBasket) => list);
 	}
 
+
+
+/*
 	//Удаление продуктов из корзины
 	deleteProduct(productId: string): Promise<{ message: string }> {
 		return this._baseApi

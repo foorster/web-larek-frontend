@@ -1,4 +1,4 @@
-import { IProduct, TBasketProduct } from './../../types';
+import { IActions, IProduct, TBasketProduct } from './../../types';
 import { IEvents } from '../base/events';
 
 export interface IBasketProduct {
@@ -17,7 +17,7 @@ export class BasketProduct implements IBasketProduct {
 	price: HTMLElement;
 	deleteButton: HTMLButtonElement;
 
-	constructor(template: HTMLTemplateElement, protected events: IEvents) {
+	constructor(template: HTMLTemplateElement, protected events: IEvents, actions?: IActions) {
 		this.basketProduct = template.content
 			.querySelector('.basket__item')
 			.cloneNode(true) as HTMLElement;
@@ -27,6 +27,10 @@ export class BasketProduct implements IBasketProduct {
 		this.deleteButton = this.basketProduct.querySelector(
 			'.basket__item-delete'
 		);
+		if (actions?.onClick) {
+			this.deleteButton.addEventListener('click', actions.onClick);
+		}
+		
 	}
 
 	protected setPrice(value: number | null) {
@@ -42,4 +46,6 @@ export class BasketProduct implements IBasketProduct {
 		this.price.textContent = this.setPrice(data.price);
 		return this.basketProduct;
 	}
+	
+
 }

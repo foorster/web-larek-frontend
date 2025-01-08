@@ -16,16 +16,19 @@ export class FullProduct extends Component<IProduct> {
 
 	constructor(container: HTMLTemplateElement, protected events: IEvents) {
 		super(container);
-		this.container = container.content
-			.querySelector('.card_full')
-			.cloneNode(true) as HTMLElement;
 		this.descriptionProduct = this.container.querySelector('.card__text');
 		this.imageProduct = this.container.querySelector('.card__image');
 		this.titleProduct = this.container.querySelector('.card__title');
 		this.categoryProduct = this.container.querySelector('.card__category');
 		this.priceProduct = this.container.querySelector('.card__price');
 		this.basketButton = this.container.querySelector('.card__button');
+		this.basketButton.addEventListener('click', () => {
+			this.events.emit('product:inBasket');
+			this.basketButton.setAttribute('disabled', 'disabled');
+		});
 	}
+	changeButton() {}
+
 	//Устанавливаем цену продукта, проверяем на бесценность
 	setPrice(value: number | null): string {
 		if (value === null) {
@@ -33,6 +36,9 @@ export class FullProduct extends Component<IProduct> {
 		}
 		return String(value) + ' синапсов';
 	}
+
+
+
 	//Устанавливаем описание
 	set description(description: string) {
 		this.descriptionProduct.textContent = description;

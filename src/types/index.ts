@@ -14,19 +14,19 @@ export interface IProductData {
 	product:IProduct
 	products: IProduct[]; // Массив продуктов, полученных с сервера
 	preview: string | null;
-	addProduct(product: IProduct): void;
-	deleteProduct(productId: string): void;
-	updateProduct(product: IProduct): void;
-	getProduct(productId: string): void;
-	checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
+//	addProduct(product: IProduct): void;
+//	deleteProduct(productId: string): void;
+//	updateProduct(product: IProduct): void;
+//	getProductById(productId: string): void;
+//	checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
 }
 
 // Интерфейс корзины
 export interface IBasket {
 	_list: TBasketProduct[];
 	total: number; // Сумма всех продуктов
-	showTotal(): number; // Показываем cумму товаров в корзине
-	clearListBasket(): void; // Очищаем корзину
+//	showTotal(): number; // Показываем cумму товаров в корзине
+//	clearListBasket(): void; // Очищаем корзину
 }
 
 // Интерфейс данных пользователя

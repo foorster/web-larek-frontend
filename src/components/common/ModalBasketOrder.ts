@@ -15,6 +15,7 @@ export class BasketList extends Component<IBasketList> {
 	_list: HTMLElement;
 	arrange: HTMLButtonElement;
 	total: HTMLElement;
+	basketCounter: HTMLElement;
 
 	constructor(template: HTMLTemplateElement, protected events: IEvents) {
 		super(template);
@@ -25,25 +26,26 @@ export class BasketList extends Component<IBasketList> {
 		this._list = this.container.querySelector('.basket__list');
 		this.arrange = this.container.querySelector('.basket__button');
 		this.total = this.container.querySelector('.basket__price');
-		console.log(this.title)
-		console.log(this.title)
-		console.log(this.title)
-		console.log(this.title)
-        this.products = [];
+		this.basketCounter = document.querySelector('.header__basket-counter');
+		this.products = [];
 	}
+	
+
+	setBasketCounter(value: number) {
+		this.basketCounter.textContent = String(value);
+	  }
 
 	totalSum(sum: number) {
 		this.total.textContent = String(sum + ' синапсов');
-	  }
-	
-    set products(products: HTMLElement[]) { 
-        if (products.length) { //Проверяем массив на наличие элементов, если есть, то кнопка активна
-          this._list.replaceChildren(...products);
-          this.arrange.removeAttribute('disabled');
-        } else {
-          this.arrange.setAttribute('disabled', 'disabled');
-        }
-      }
+	}
 
+	set products(products: HTMLElement[]) {
+		if (products.length) {
+			//Проверяем массив на наличие элементов, если есть, то кнопка активна
+			this._list.replaceChildren(...products);
+			this.arrange.removeAttribute('disabled');
+		} else {
+			this.arrange.setAttribute('disabled', 'disabled');
+		}
+	}
 }
-

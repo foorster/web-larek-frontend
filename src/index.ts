@@ -25,6 +25,9 @@ const productTemplate: HTMLTemplateElement =
 const basketTemplate: HTMLTemplateElement = document.querySelector('#basket'); //Темплейт всей корзины
 const basketTemplateProduct: HTMLTemplateElement =
 	document.querySelector('#card-basket'); //Темплейт одного продукта из корзины
+const productFullTemplate: HTMLTemplateElement = document.querySelector(
+	'#card-preview'
+) as HTMLTemplateElement; //Темплейт полной версии продукта
 
 const appApi = new AppApi(API_URL); //Класс для вытягивания продуктов с сервера
 const productData = new ProductData(events); //Класс с данными продукта
@@ -62,34 +65,6 @@ events.on('initialData: loaded', () => {
 
 //Если нажали на иконку корзины, отрендери данные
 events.on('basket:open', () => {
-	//!!!!!!!!!!!!!!!!!!!!!!!!!ТЕСТ!!!!!!!!!!!!!!!!!!!!! ПОТОМ УДАЛИТЬ!!!!!!!!!!!!!!!!!!!!!!!
-	basketListData._list = [
-		{
-			id: '854cef69-976d-4c2a-a18c-2aa45046c390',
-			title: '+1 час в сутках',
-			price: 750,
-		},
-		{
-			id: 'b06cde61-912f-4663-9751-09956c0eed67',
-			title: 'Мамка-таймер',
-			price: null,
-		},
-		{
-			id: '854cef69-976d-4c2a-a18c-2aa45046c390',
-			title: '+1 час в сутках',
-			price: 750,
-		},
-	];
-
-	let i = 0; //Счетчик продуктов в корзине
-	let sum = 0;
-	basket.products = basketListData.list.map((product) => {
-		const basketProduct = new BasketProduct(basketTemplateProduct, events); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
-		sum += product.price;
-		i++;
-		return basketProduct.render(product, i); //Отрисовываем один продукт
-	});
-	basket.totalSum(sum); //Кладем итоговую сумму товаров в модалку корзины
 	modal.content = basket.render(); //Кладем контент корзины в модалку
 	modal.render(); //Отрисовываем модалку
 });
@@ -99,16 +74,15 @@ events.on('modal:close', () => {
 	modal.close();
 });
 
-const productFullTemplate: HTMLTemplateElement = document.querySelector(
-	'#card-preview'
-) as HTMLTemplateElement; //Темплейт всей корзины
+//Выбрали продукт
 events.on('Product:select', (fullProduct: IProduct) => {
 	productData.setPreview(fullProduct);
 });
 
+//Открыли продукт
 events.on('Product:open', (fullProduct: IProduct) => {
-	const product = new FullProduct(productFullTemplate, events);
-	modal.content = product.render(fullProduct); //Кладем контент корзины в модалку
+	const product = new FullProduct(cloneTemplate(productFullTemplate), events);
+	modal.content = product.render(fullProduct); //Кладем контент продукта в модалку
 	modal.render(); //Отрисовываем модалку
 });
 
@@ -116,7 +90,36 @@ events.on('Product:open', (fullProduct: IProduct) => {
 events.on('Product:open', () => {
 	modal.block = true;
 });
-
 events.on('modal:close', () => {
 	modal.block = false;
 });
+
+//Добавили карточку товара в корзину
+events.on('product:inBasket', () => {
+	basketListData.setSelectedСard(productData.product);
+	let i = 0; //Счетчик продуктов в корзине
+	basket.totalSum(basketListData.getSumProducts()); // отобразить сумма всех продуктов в корзине
+	//Рендерим данные о товарах и сумме сразу, при добавлении товара в корзину
+	basket.products = basketListData._list.map((product) => {
+		const basketProduct = new BasketProduct(basketTemplateProduct, events, { onClick: () => events.emit('basket:productRemove', product) }); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
+		i++;
+		return basketProduct.render(product, i); //Отрисовываем один продукт
+	});
+	basket.setBasketCounter(i); //Кладем количество товаров  в иконку корзины
+	modal.block = true;
+});
+
+
+//Удалили карточку товара из корзины
+events.on('basket:productRemove', (product: IProduct) => {
+	basketListData.deleteProduct(product);
+	basket.totalSum(basketListData.getSumProducts()); // Отобразили сумму всех продуктов в корзине
+	let i = 0;
+	basket.products = basketListData._list.map((product) => {
+		const basketProduct = new BasketProduct(basketTemplateProduct, events, { onClick: () => events.emit('basket:productRemove', product) }); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
+		i++;
+		return basketProduct.render(product, i); //Отрисовываем один продукт
+	});
+	basket.setBasketCounter(i); //Кладем количество товаров  в иконку корзины
+	modal.block = true;
+  });
