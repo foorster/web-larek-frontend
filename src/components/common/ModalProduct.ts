@@ -4,10 +4,9 @@ import { IEvents } from '../base/events';
 import { IProduct, IActions } from '../../types';
 import { Component } from '../base/Component';
 import { CDN_URL } from '../../utils/constants';
-import { ensureElement } from '../../utils/utils'
+import { ensureElement } from '../../utils/utils';
 
 export class FullProduct extends Component<IProduct> {
-
 	protected descriptionProduct: HTMLElement;
 	protected imageProduct: HTMLImageElement;
 	protected titleProduct: HTMLElement;
@@ -20,7 +19,6 @@ export class FullProduct extends Component<IProduct> {
 		container: HTMLElement,
 		protected events: IEvents,
 		protected actions?: IActions
-
 	) {
 		super(container);
 		this.descriptionProduct = this.container.querySelector('.card__text');
@@ -34,17 +32,16 @@ export class FullProduct extends Component<IProduct> {
 		}
 
 		this._text = ensureElement('.card__text', container);
-		
 	}
 
 	set text(value: string) {
 		this.setText(this._text, value);
-	} 
+	}
 
 	updatePrice(selected: boolean) {
 		this.setText(
 			this.basketButton,
-			selected ? 'Убрать из корзины' : 'В корзину'
+			selected ? 'Удалить из корзины' : 'В корзину'
 		);
 	}
 
@@ -63,6 +60,10 @@ export class FullProduct extends Component<IProduct> {
 			this.basketButton.setAttribute('disabled', 'true');
 			return 'Бесценный товар';
 		}
+	}
+
+	isPriceless(prod: Partial<IProduct>) {
+		return prod.price ? false : true;
 	}
 
 	//Устанавливаем описание
@@ -85,12 +86,11 @@ export class FullProduct extends Component<IProduct> {
 	set price(price: number | null) {
 		this.priceProduct.textContent = this.setPrice(price);
 	}
-	get button() {
-		return this.basketButton;
-	}
+
 	render(data: Partial<IProduct> | undefined) {
 		if (!data) return this.container;
-		this.basketButton.textContent = this.changeButton(data);
+		if (this.isPriceless(data)){
+		this.basketButton.textContent = this.changeButton(data);}
 		return super.render(data);
 	}
 }

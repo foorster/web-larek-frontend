@@ -45,7 +45,7 @@ events.onAll((event) => {
 //Подгружаем данные с сервера
 appApi
 	.getListProducts()
-	.then(function (_products: IProduct[]) {
+	.then(function (_products: IProductSelect[]) {
 		productData._products = _products;
 		events.emit('initialData: loaded');
 	})
@@ -64,31 +64,32 @@ events.on('initialData: loaded', () => {
 });
 
 //Добавили карточку товара в корзину
-events.on('product:inBasket', (product: IProduct) => {
+events.on('product:inBasket', (product: IProductSelect) => {
 	//Проверяет, есть ли этот продукт в корзине
 	const status = basketListData.checkProduct(product.id);
 	if (!status) {
 		basketListData.setSelectedСard(product);
 		events.emit('basket:change');
 	}
+	product.selected = true
 });
 
 //Удалили карточку товара из корзины
-events.on('basket:productRemove', (product: IProduct) => {
+events.on('basket:productRemove', (product: IProductSelect) => {
+	product.selected = false
 	basketListData.deleteProduct(product);
 	events.emit('basket:change');
 });
 
 events.on('basket:change', () => {
 	basket.totalSum(basketListData.getSumProducts()); // Отобразили сумму всех продуктов в корзине
-
 	//Отрисовываем
 	let i = 0;
 	basket.products = basketListData.list.map((product) => {
 		const basketProduct = new BasketProduct(basketTemplateProduct, events, {
 			onClick: () => {
 				events.emit('basket:productRemove', product);
-				events.emit('productButton:change', product);
+				//events.emit('productButton:change', product);
 			},
 		}); //Для каждого продукта в списке создаем класс и передаем туда темплейт одного продукта
 		i++;
@@ -109,25 +110,27 @@ events.on('modal:close', () => {
 });
 
 //Выбрали продукт
-events.on('Product:select', (fullProduct: IProduct) => {
+events.on('Product:select', (fullProduct: IProductSelect) => {
 	productData.setPreview(fullProduct);
 });
 
-//Открыли продукт
-events.on('Product:open', (fullProduct: IProduct) => {
+events.on('Product:open', (fullProduct: IProductSelect) => {
+	
 	const product = new FullProduct(cloneTemplate(productFullTemplate), events, {
 		onClick: () => {
-			events.emit('product:inBasket', fullProduct);
-			product.updatePrice(true)
+			fullProduct.selected
+				? events.emit('basket:productRemove', fullProduct)
+				: events.emit('product:inBasket', fullProduct);
+			product.updatePrice(fullProduct.selected)
 		},
 	});
+	console.log(fullProduct.selected)
+	product.updatePrice(fullProduct.selected)
 	modal.content = product.render(fullProduct); //Кладем контент продукта в модалку
 	modal.render(); //Отрисовываем модалку
 });
 
-events.on('productButton:change', (fullProduct: IProduct) => {
-	console.log(fullProduct)
-	})
+
 
 //Блокируем прокрутку при открытии модалки
 events.on('Product:open', () => {
