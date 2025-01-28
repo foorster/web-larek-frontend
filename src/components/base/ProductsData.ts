@@ -47,13 +47,16 @@ export class ProductData implements IProductData, IBasket {
 		return this._list.length === 0;
 	}
 
-
-	setPreview(item: IProduct) {
-		this.product = item;
-		this.events.emit('Product:open', item);
+//По продукту кликнули, сгенерируй событие открытия
+	setPreview(product: IProduct) {
+		this.product = product;
+		this.events.emit('Product:open', product);
 	}
+
+//По кнопке корзины кликнули, сгенерируй событие добавления
 	setSelectedСard(data: IProduct) {
 		this.list.push(data);
+		this.events.emit('basket:change');
 	}
 
 	//Будет искать продукт с заданным айди в массиве корзины
@@ -63,12 +66,12 @@ export class ProductData implements IProductData, IBasket {
 		} else return false;
 	}
 	//Удаление продукта из массива. Берем индекс этого продукта в массиве и если он больше нуля режем массив
+	//По кнопке корзины кликнули, удали и обнови внешний вид корзины
 	deleteProduct(prod: IProduct) {
 		const index = this.list.indexOf(prod);
 		if (index >= 0) {
 			this.list.splice(index, 1);
-		} else {
-			console.log('В КОРЗИНЕ ПУСТО')
+			this.events.emit('basket:change');
 		}
 	}
 

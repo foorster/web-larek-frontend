@@ -28,9 +28,7 @@ export class MainPage extends Component<IMainPage> {
 		
 	}
 
-
-
-	setTotal(value: number) {
+	set _total(value: number) {
 		this.total.textContent = String(value);
 	  }
 

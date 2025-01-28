@@ -4,7 +4,6 @@ import { IEvents } from '../base/events';
 import { IProduct, IActions } from '../../types';
 import { Component } from '../base/Component';
 import { CDN_URL } from '../../utils/constants';
-import { ensureElement } from '../../utils/utils';
 
 export class FullProduct extends Component<IProduct> {
 	protected descriptionProduct: HTMLElement;
@@ -13,7 +12,6 @@ export class FullProduct extends Component<IProduct> {
 	protected categoryProduct: HTMLElement;
 	protected priceProduct: HTMLElement;
 	protected basketButton: HTMLButtonElement;
-	protected _text: HTMLElement;
 
 	constructor(
 		container: HTMLElement,
@@ -31,11 +29,6 @@ export class FullProduct extends Component<IProduct> {
 			this.basketButton.addEventListener('click', actions.onClick);
 		}
 
-		this._text = ensureElement('.card__text', container);
-	}
-
-	set text(value: string) {
-		this.setText(this._text, value);
 	}
 
 	updatePrice(selected: boolean) {

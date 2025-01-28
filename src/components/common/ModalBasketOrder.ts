@@ -15,11 +15,11 @@ export class BasketList extends Component<IBasketList> {
 
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
-
 		this._list = ensureElement('.basket__list', this.container);
 		this.arrangeButton = ensureElement('.basket__button', this.container);
 		this.total = ensureElement('.basket__price', this.container);
 		this.products = [];
+		this.arrangeButton.addEventListener('click', () => { this.events.emit('ModalPay:open') });
 	}
 
 	emptyBasket() {
