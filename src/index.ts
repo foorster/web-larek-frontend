@@ -15,6 +15,7 @@ import { ensureElement } from './utils/utils';
 import { FullProduct } from './components/common/ModalProduct';
 import { Pay } from './components/common/ModalPay';
 import { Contact } from './components/common/ModalContact';
+import {Success} from './components/common/ModalSuccessfulOrder'
 import { list } from 'postcss';
 
 const events = new EventEmitter();
@@ -40,6 +41,7 @@ const productFullTemplate: HTMLTemplateElement = document.querySelector(
 const payTemplate: HTMLTemplateElement = document.querySelector('#order'); //Темплейт способа оплаты и адреса
 const contactsTemplate: HTMLTemplateElement =
 	document.querySelector('#contacts'); //Темплейт контактов пользователя
+const successTemplate: HTMLTemplateElement = document.querySelector('#success');
 
 //*********************************************************************************//
 //*********************************************************************************//
@@ -159,7 +161,7 @@ events.on('modal:close', () => {
 events.on('ModalPay:open', () => {
 	modal.content = pay.render(); //Кладем контент оплаты в модалку
 	modal.render(); //Отрисовываем модалку
-	orderData.products = basketListData.list.map((item) => item.id); //Кладем в МОДЕЛЬ заказа id товаров из корзины
+	orderData.items = basketListData.list.map((item) => item.id); //Кладем в МОДЕЛЬ заказа id товаров из корзины
 	orderData.total = basketListData.getSumProducts() //Кладем в МОДЕЛЬ заказа общую сумму товаров
 
 });
@@ -219,4 +221,17 @@ events.on('Product:open', () => {
 });
 events.on('modal:close', () => {
 	modal.block = false;
+});
+
+events.on('ModalSuccessful:open', () => {
+	appApi
+		.sendOrder(orderData.getData())
+		.then((data) => {
+			console.log(data); //Ответ сервера
+			const success = new Success(cloneTemplate(successTemplate), events);
+			productData.clearBasket();
+			modal.content = success.render();
+			modal.render();
+		})
+		.catch((error) => console.log(error));
 });

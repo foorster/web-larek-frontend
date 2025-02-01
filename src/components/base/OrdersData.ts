@@ -5,7 +5,7 @@ export interface IOrderData {
 	email: string;
 	phone: string;
 	payment: string;
-	products: string[];
+	items: string[];
 	total: number;
 	validateOrder(): boolean;
 	validateContacts(): boolean;
@@ -18,7 +18,7 @@ export class OrderData implements IOrderData {
 	email: string;
 	phone: string;
 	payment: string;
-	products: string[];
+	items: string[];
 	total: number;
 	formErrors: FormErrors = {};
 
@@ -28,7 +28,7 @@ export class OrderData implements IOrderData {
 		this.email = '';
 		this.phone = '';
 		this.payment = '';
-		this.products = [];
+		this.items = [];
 		this.total = 0;
 	}
 
@@ -102,13 +102,15 @@ export class OrderData implements IOrderData {
 		return Object.keys(errors).length === 0;
 	}
 
+    
+
 	getData() {
 		return {
 			address: this.address,
 			email: this.email,
 			phone: this.phone,
 			payment: this.payment,
-			products: this.products,
+			items: this.items,
 			total: this.total,
 		};
 	}

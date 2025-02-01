@@ -90,3 +90,17 @@ export interface IActions {
 export interface Order extends OrderFormData {
 	items: string[];
 }
+
+export interface OrderResult {
+	id: string;
+	total: number;
+}
+
+export interface IOrderLot{
+	address: string;
+	email: string;
+	phone: string;
+	payment: string;
+	total: number;
+	items: string[];
+  }

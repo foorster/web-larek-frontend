@@ -20,9 +20,16 @@ export class Contact extends Component<IContact> {
     ) {
         super(container);
         this.nextInfo = this.container.querySelector('.contact__button');
-        this.nextInfo.addEventListener('click', () => {
-			this.events.emit('ModalSuccessful:open');
-		});
+        //this.nextInfo.addEventListener('click', () => {
+            //this.events.preventDefault();
+			//this.events.emit('ModalSuccessful:open');
+		//});
+
+        this.container.addEventListener('submit', (event: Event) => {
+            event.preventDefault();
+            this.events.emit('ModalSuccessful:open');
+          });
+
         this.container.addEventListener('input', (event: Event) => {
 			const target = event.target as HTMLInputElement;
 			const field = target.name;

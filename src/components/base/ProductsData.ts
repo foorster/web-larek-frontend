@@ -1,11 +1,11 @@
-import { Order, IProduct, IProductData, IBasket, TBasketProduct } from '../../types';
+import { Order, IProduct, IProductData, IBasket, TBasketProduct, IProductSelect } from '../../types';
 import { IEvents } from './events';
 
 //Класс наследует два интерфейса. Изначально планировалось делать разные классы
 //для продукта и корзины, по стало не совсем понятно как дотянуться до списка
 //положенных в корзину товаров, чтобы удалить нужный
 export class ProductData implements IProductData, IBasket {
-	products: IProduct[];
+	products: IProductSelect[];
 	product: IProduct;
 	preview: string | null;
 	_list: TBasketProduct[];
@@ -25,7 +25,7 @@ export class ProductData implements IProductData, IBasket {
 	}
 
 	//Так как нам нужно установить и получить продукты на странице и в корзине, необходимы set и get
-	set _products(_products: IProduct[]) {
+	set _products(_products: IProductSelect[]) {
 		this.products = _products;
 		this.events.emit('_products:changed');
 	}
@@ -91,9 +91,20 @@ export class ProductData implements IProductData, IBasket {
 		}, 0);
 	}
 
-
+	clearBasket() {
+		this._products.forEach((product) => (product.selected = false));
+		this.list = [];
+		this.order.items = [];
+		//this.emitChanges('basket:cleared', { basket: this._list });
+	}
 	/*
 
+		clearBasket() {
+		this.basket.forEach((item) => (item.selected = false));
+		this.basket = [];
+		this.order.items = [];
+		this.emitChanges('basket:cleared', { basket: this.basket });
+	}
 
 	//Кладем товар в корзину (в массив list)
 	addProduct(product: IProduct) {
@@ -131,3 +142,5 @@ export class ProductData implements IProductData, IBasket {
 
 	clearListBasket() {}*/
 }
+
+
