@@ -9,6 +9,7 @@ export interface IProduct {
 	price: number | null;
 }
 
+// Интерфейс продукта, добавили статус выбранности для смены кнопки
 export interface IProductSelect {
 	id: string;
 	description: string;
@@ -19,51 +20,47 @@ export interface IProductSelect {
 	selected: boolean;
 }
 
+// Интерфейс списка продуктов в корзине
+export interface IBasketList {
+	products: HTMLElement[];
+	total: HTMLElement;
+}
+
+// Интерфейс одного продукта в списке в корзине
+export interface IBasketProduct {
+	basketProduct: HTMLElement;
+	index: HTMLElement;
+	title: HTMLElement;
+	price: HTMLElement;
+	deleteButton: HTMLButtonElement;
+	render(data: IProduct, item: number | null): HTMLElement;
+}
 
 // Интерфейс всех продуктов, методы
 export interface IProductData {
-	product:IProduct
+	product: IProduct;
 	products: IProduct[]; // Массив продуктов, полученных с сервера
 	preview: string | null;
-//	addProduct(product: IProduct): void;
-//	deleteProduct(productId: string): void;
-//	updateProduct(product: IProduct): void;
-//	getProductById(productId: string): void;
-//	checkProduct(productId: string): boolean; // Проверяет есть ли этот продукт в массиве корзины
+	setPreview(product: IProduct): void; //По продукту кликнули, сгенерируй событие открытия
+	clearSelect(): void; // Очистка выделенности продукта
 }
 
 // Интерфейс корзины
 export interface IBasket {
 	_list: TBasketProduct[];
 	total: number; // Сумма всех продуктов
-//	showTotal(): number; // Показываем cумму товаров в корзине
-//	clearListBasket(): void; // Очищаем корзину
+	setSelectedСard(data: IProduct): void; // Добавляем товар в список
+	checkProduct(productId: string): Boolean; //Будет искать продукт с заданным айди в массиве корзины
+	deleteProduct(prod: IProductSelect): void; //Удаление продукта из списка
+	getSumProducts(): void; //Cумма всех товаров в корзине
+	clearBasket(): void; //Очищаем список
 }
-
-// Интерфейс данных пользователя
-export interface IUserInfo {
-	address: string;
-	email: string;
-	phone: number;
-	payment: TPaymentMethod;
-}
-
-export interface IUserInfoData {
-	getUserInfo(): IUserInfo;
-	setUserInfo(userData: IUserInfo): void;
-}
-
-// Тип для выбора способа оплаты
-export type TPaymentMethod = 'online' | 'cash';
 
 // Тип для корзины с заказами
 export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
 
-// Тип для модалки с оплатой заказа
-export type TPay = Pick<IUserInfo, 'address'>;
-
-// Тип для модалки с контактами
-export type TContact = Pick<IUserInfo, 'email' | 'phone'>;
+// Тип для выбора способа оплаты
+export type TPaymentMethod = 'online' | 'offline';
 
 //Выносим нужные методы
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
@@ -77,9 +74,10 @@ export interface IApi {
 
 export interface IActions {
 	onClick: (event: MouseEvent) => void;
-  }
+}
 
-  export interface OrderFormData {
+//Интерфейс данных заказа
+export interface IOrderFormData {
 	payment?: string;
 	address?: string;
 	email?: string;
@@ -87,20 +85,46 @@ export interface IActions {
 	total?: string | number;
 }
 
-export interface Order extends OrderFormData {
+//Интерфейс данных заказа + список продуктов с корзины
+export interface IOrder extends IOrderFormData {
 	items: string[];
 }
 
-export interface OrderResult {
+export interface IOrderResult {
 	id: string;
 	total: number;
 }
 
-export interface IOrderLot{
+export interface IOrderData {
 	address: string;
 	email: string;
 	phone: string;
 	payment: string;
-	total: number;
 	items: string[];
-  }
+	total: number;
+	validateOrder(): boolean;
+	validateContacts(): boolean;
+}
+
+export type TFormErrors = Partial<Record<keyof IOrderData, string>>;
+
+export interface IMainPage {
+	products: HTMLElement[];
+	total: number;
+}
+
+export interface IPay {
+	payForm: HTMLElement;
+	formErrors: HTMLElement;
+}
+
+export interface IContact {
+	contactForm: HTMLElement;
+	formErrors: HTMLElement;
+}
+
+export interface ISuccessful {
+	successfulForm: HTMLElement;
+	nextOrder: HTMLButtonElement;
+	//render(total: number):HTMLElement;
+}

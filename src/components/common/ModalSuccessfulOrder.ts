@@ -1,27 +1,23 @@
 //---------------Контент информации об успешном заказе---------------//
 import { IEvents } from '../base/events';
-import { Component } from '../base/Component';
 
-export interface ISuccessful {
-	successfulForm: HTMLElement;
-	description: HTMLElement;
-	nextOrder: HTMLButtonElement;
-}
-
-export class Success extends Component<ISuccessful> {
+export class Success {
 	container: HTMLElement;
-	description: HTMLElement;
 	nextOrder: HTMLButtonElement;
-
-	constructor(container: HTMLElement, protected events: IEvents) {
-		super(container);
-		this.description = this.container.querySelector(
-			'.order-success__description'
-		);
+	totalSum: HTMLElement;
+	constructor(template: HTMLTemplateElement, protected events: IEvents) {
+		this.container = template.content
+			.querySelector('.order-success')
+			.cloneNode(true) as HTMLElement;
 		this.nextOrder = this.container.querySelector('.order-success__close');
-
+		this.totalSum = this.container.querySelector('.order-success__description');
 		this.nextOrder.addEventListener('click', () => {
 			events.emit('successfulModal:close');
 		});
+	}
+
+	render(total: number) {
+		this.totalSum.textContent = String(`Списано ${total} синапсов`);
+		return this.container;
 	}
 }

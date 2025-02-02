@@ -1,8 +1,9 @@
 import { EventEmitter } from './components/base/events';
 import { ProductData } from './components/base/ProductsData';
+import { BasketData } from './components/base/ProductsData';
 import { OrderData } from './components/base/OrdersData';
 import './scss/styles.scss';
-import { IProduct, IProductSelect, OrderFormData } from './types';
+import { IProductSelect, IOrderFormData } from './types';
 import { AppApi } from './components/AppApi';
 import { API_URL } from './utils/constants';
 import { Product } from './components/Product';
@@ -15,8 +16,7 @@ import { ensureElement } from './utils/utils';
 import { FullProduct } from './components/common/ModalProduct';
 import { Pay } from './components/common/ModalPay';
 import { Contact } from './components/common/ModalContact';
-import {Success} from './components/common/ModalSuccessfulOrder'
-import { list } from 'postcss';
+import { Success } from './components/common/ModalSuccessfulOrder';
 
 const events = new EventEmitter();
 //Для проверки работы компонентов (например: тык на фотку -> Product:select)
@@ -64,7 +64,7 @@ const productsGallery = new MainPage(
 //*********************************************************************************//
 const appApi = new AppApi(API_URL); //Класс для вытягивания продуктов с сервера
 const productData = new ProductData(events); //Класс с данными продукта
-const basketListData = new ProductData(events); //Класс с данными в корзине
+const basketListData = new BasketData(events); //Класс с данными в корзине
 const orderData = new OrderData(events); //Класс с данными заказа
 
 //Подгружаем данные с сервера
@@ -162,8 +162,7 @@ events.on('ModalPay:open', () => {
 	modal.content = pay.render(); //Кладем контент оплаты в модалку
 	modal.render(); //Отрисовываем модалку
 	orderData.items = basketListData.list.map((item) => item.id); //Кладем в МОДЕЛЬ заказа id товаров из корзины
-	orderData.total = basketListData.getSumProducts() //Кладем в МОДЕЛЬ заказа общую сумму товаров
-
+	orderData.total = basketListData.getSumProducts(); //Кладем в МОДЕЛЬ заказа общую сумму товаров
 });
 
 //Сработало событие изменения в инпуте address
@@ -192,6 +191,22 @@ events.on(`phone:changed`, (data: { field: string; value: string }) => {
 	orderData.setPhone(data.field, data.value); //Кладем в МОДЕЛЬ заказа данные номера
 });
 
+//Сработало событие отправки заказа на сервер
+events.on('ModalSuccessful:open', () => {
+	const totalSum = orderData.total;
+	appApi
+		.sendOrder(orderData.getData())
+		.then(() => {
+			const success = new Success(successTemplate, events);
+			basketListData.clearBasket();
+			productData.clearSelect();
+			modal.content = success.render(totalSum);
+			orderData.total = basketListData.getSumProducts();
+			modal.render();
+		})
+		.catch((error) => console.log(error));
+});
+
 //*********************************************************************************//
 //*********************************************************************************//
 //**************************** Работа с ошибками форм *****************************//
@@ -199,7 +214,7 @@ events.on(`phone:changed`, (data: { field: string; value: string }) => {
 //*********************************************************************************//
 
 //Сработало событие ошибок формы оплаты
-events.on('formErrors:address', (errors: Partial<OrderFormData>) => {
+events.on('formErrors:address', (errors: Partial<IOrderFormData>) => {
 	const { address, payment } = errors;
 	pay.valid = !address && !payment;
 	pay.formErrors.textContent = Object.values({ address, payment })
@@ -207,7 +222,7 @@ events.on('formErrors:address', (errors: Partial<OrderFormData>) => {
 		.join('; ');
 });
 
-events.on('formErrors:contacts', (errors: Partial<OrderFormData>) => {
+events.on('formErrors:contacts', (errors: Partial<IOrderFormData>) => {
 	const { email, phone } = errors;
 	contact.valid = !email && !phone;
 	contact.formErrors.textContent = Object.values({ phone, email })
@@ -215,23 +230,18 @@ events.on('formErrors:contacts', (errors: Partial<OrderFormData>) => {
 		.join('; ');
 });
 
-//Блокируем прокрутку при открытии модалки
+//Блокируем прокрутку при открытии модалки продукта
 events.on('Product:open', () => {
 	modal.block = true;
 });
+
+//Блокируем прокрутку при открытии модалки корзины
+events.on('basket:open', () => {
+	modal.block = true;
+});
+
 events.on('modal:close', () => {
 	modal.block = false;
 });
 
-events.on('ModalSuccessful:open', () => {
-	appApi
-		.sendOrder(orderData.getData())
-		.then((data) => {
-			console.log(data); //Ответ сервера
-			const success = new Success(cloneTemplate(successTemplate), events);
-			productData.clearBasket();
-			modal.content = success.render();
-			modal.render();
-		})
-		.catch((error) => console.log(error));
-});
+events.on('successfulModal:close', () => modal.close());

@@ -1,14 +1,9 @@
 import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
 import { createElement, ensureElement } from '../../utils/utils'
-
-interface IBasketList {
-	products: HTMLElement[];
-	total: HTMLElement;
-}
+import { IBasketList } from '../../types';
 
 export class BasketList extends Component<IBasketList> {
-
 	_list: HTMLElement;
 	arrangeButton: HTMLElement;
 	total: HTMLElement;
@@ -43,6 +38,4 @@ export class BasketList extends Component<IBasketList> {
 			this.arrangeButton.setAttribute('disabled', 'disabled');
 		}
 	}
-
-
 }

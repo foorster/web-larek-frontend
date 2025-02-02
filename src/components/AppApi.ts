@@ -1,6 +1,6 @@
-import { IBasket, IProduct, TBasketProduct } from '../types';
+import {  IProduct } from '../types';
 import { Api, ApiListResponse } from './base/api';
-import { Order, OrderResult, IOrderLot } from '../types';
+import {  IOrderResult, IOrder } from '../types';
 export interface IApiModel {
 	items: IProduct[];
 	getListProducts: () => Promise<IProduct[]>;
@@ -20,21 +20,10 @@ export class AppApi extends Api {
 		);
 	}
 
-	//Добавление продуктов в корзину
-	addProduct(data: TBasketProduct): Promise<IBasket> {
-		return this.post<IBasket>(`/order`, data)
-			.then((list: IBasket) => list);
-	}
 
 //Отправка заказа
-	sendOrder(order: IOrderLot): Promise<OrderResult> {
-		return this.post('/order', order).then((data: OrderResult) => data);
+	sendOrder(order: IOrder): Promise<IOrderResult> {
+		return this.post('/order', order).then((data: IOrderResult) => data);
 	}
-/*
-	//Удаление продуктов из корзины
-	deleteProduct(productId: string): Promise<{ message: string }> {
-		return this._baseApi
-			.post<{ message: string }>(`/product/${productId}`, {}, 'DELETE')
-			.then((res: { message: string }) => res);
-	}*/
+
 }

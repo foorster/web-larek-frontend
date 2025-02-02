@@ -28,7 +28,6 @@ export class FullProduct extends Component<IProduct> {
 		if (actions?.onClick) {
 			this.basketButton.addEventListener('click', actions.onClick);
 		}
-
 	}
 
 	updatePrice(selected: boolean) {
@@ -82,8 +81,9 @@ export class FullProduct extends Component<IProduct> {
 
 	render(data: Partial<IProduct> | undefined) {
 		if (!data) return this.container;
-		if (this.isPriceless(data)){
-		this.basketButton.textContent = this.changeButton(data);}
+		if (this.isPriceless(data)) {
+			this.basketButton.textContent = this.changeButton(data);
+		}
 		return super.render(data);
 	}
 }

@@ -1,17 +1,5 @@
 import { IEvents } from './events';
-
-export interface IOrderData {
-	address: string;
-	email: string;
-	phone: string;
-	payment: string;
-	items: string[];
-	total: number;
-	validateOrder(): boolean;
-	validateContacts(): boolean;
-}
-
-export type FormErrors = Partial<Record<keyof IOrderData, string>>;
+import { IOrderData, TFormErrors } from './../../types';
 
 export class OrderData implements IOrderData {
 	address: string;
@@ -20,7 +8,7 @@ export class OrderData implements IOrderData {
 	payment: string;
 	items: string[];
 	total: number;
-	formErrors: FormErrors = {};
+	formErrors: TFormErrors = {};
 
 	// Данные, которые будут приходить сюда по мере заполенения форм
 	constructor(protected events: IEvents) {
@@ -37,7 +25,7 @@ export class OrderData implements IOrderData {
 			this.address = value;
 		}
 		if (this.validateOrder()) {
-			this.events.emit('order:ready', this.getData());
+			this.events.emit('address:ready', this.getData());
 		}
 	}
 
@@ -46,7 +34,7 @@ export class OrderData implements IOrderData {
 			this.email = value;
 		}
 		if (this.validateContacts()) {
-			this.events.emit('order:ready', this.getData());
+			this.events.emit('email:ready', this.getData());
 		}
 	}
 
@@ -55,14 +43,13 @@ export class OrderData implements IOrderData {
 			this.phone = value;
 		}
 		if (this.validateContacts()) {
-			this.events.emit('order:ready', this.getData());
+			this.events.emit('phone:ready', this.getData());
 		}
 	}
 
 	validateOrder() {
 		const regexp = /^[а-яА-ЯёЁa-zA-Z0-9\s\/.,-]{7,}$/;
 		const errors: typeof this.formErrors = {};
-
 		if (!this.address) {
 			errors.address = 'Необходимо указать адрес';
 		} else if (!regexp.test(this.address)) {
@@ -70,7 +57,6 @@ export class OrderData implements IOrderData {
 		} else if (!this.payment) {
 			errors.payment = 'Выберите способ оплаты';
 		}
-
 		this.formErrors = errors;
 		this.events.emit('formErrors:address', this.formErrors);
 		return Object.keys(errors).length === 0;
@@ -80,29 +66,24 @@ export class OrderData implements IOrderData {
 		const regexpEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 		const regexpPhone = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
 		const errors: typeof this.formErrors = {};
-
 		if (!this.email) {
 			errors.email = 'Необходимо указать email';
 		} else if (!regexpEmail.test(this.email)) {
 			errors.email = 'Некорректный адрес электронной почты';
 		}
-
 		if (this.phone.startsWith('8')) {
 			this.phone = '+7' + this.phone.slice(1);
 		}
-
 		if (!this.phone) {
 			errors.phone = 'Необходимо указать телефон';
 		} else if (!regexpPhone.test(this.phone)) {
 			errors.phone = 'Некорректный формат номера телефона';
 		}
-
 		this.formErrors = errors;
 		this.events.emit('formErrors:contacts', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
-    
 
 	getData() {
 		return {

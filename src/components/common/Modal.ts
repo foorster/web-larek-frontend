@@ -25,6 +25,7 @@ export class Modal<T> extends Component<T> {
 	set content(value: HTMLElement) {
 		this._content.replaceChildren(value);
 	}
+
 	//Установка блокировки прокрутки страницы, если открыта модалка
 	set block(status: boolean) {
 		if (status) {
@@ -37,9 +38,11 @@ export class Modal<T> extends Component<T> {
 	open() {
 		this.container.classList.add('modal_active');
 	}
+
 	close() {
 		this.container.classList.remove('modal_active');
 	}
+
 	render(): HTMLElement {
 		this._content;
 		this.open();
