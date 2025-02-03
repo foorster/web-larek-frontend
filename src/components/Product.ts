@@ -12,7 +12,13 @@ export class Product extends Component<IProduct> {
 	protected categoryProduct: HTMLElement;
 	protected priceProduct: HTMLElement;
 	protected basketButton: HTMLButtonElement;
-
+	protected categoryColor: Record<string, string> = {
+		'софт-скил': 'soft',
+		'другое': 'other',
+		'дополнительное': 'additional',
+		'кнопка': 'button',
+		'хард-скил': 'hard',
+	};
 	constructor(
 		protected container: HTMLElement,
 		events: IEvents,
@@ -56,6 +62,7 @@ export class Product extends Component<IProduct> {
 	//Устанавливаем категорию
 	set category(category: string) {
 		this.categoryProduct.textContent = category;
+		this.categoryProduct.className = `card__category card__category_${this.categoryColor[category]}`
 	}
 
 	//Устанавливаем цену

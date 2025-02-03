@@ -1,3 +1,4 @@
+import './scss/styles.scss';
 import { EventEmitter } from './components/base/events';
 import { ProductData } from './components/base/ProductsData';
 import { BasketData } from './components/base/ProductsData';

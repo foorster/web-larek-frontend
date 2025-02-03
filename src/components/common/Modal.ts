@@ -19,6 +19,11 @@ export class Modal<T> extends Component<T> {
 		closeButtonElement.addEventListener('click', () =>
 			this.events.emit('modal:close')
 		);
+		this.container.addEventListener('click', (evt) => {
+			if (evt.currentTarget === evt.target) {
+				this.events.emit('modal:close');
+			}
+		});
 	}
 
 	//Установка контента в модалку
